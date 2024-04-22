@@ -1,7 +1,20 @@
 {
   "name": "solution",
   "version": "1.0.0",
+  "author": "Joshua Cornett",
+  "description": "Offline assessment taken in pursuit of a front-end position with Microsoft",
+  "homepage": "https://github.com/joshua-cornett/offline-react-accessment",
   "private": true,
+  "devDependencies": {
+    "autoprefixer": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jsx-a11y": "*",
+    "eslint-plugin-react": "*",
+    "eslint-plugin-react-hooks": "*",
+    "prettier": "*"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -9,13 +22,21 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "auto-changelog": "*",
+    "prompt": "*",
+    "semver": "*"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "version-prompt-file": "node -e \"const fs = require('fs'); const semver = require('semver'); const prompt = require('prompt'); const currentVersion = require('./package.json').version; prompt.start(); prompt.get({ properties: { version: { description: `Current version is ${currentVersion}. Enter the version (press Enter to keep current or specify major, minor, patch):` } } }, (err, result) => { const newVersion = semver.valid(result.version.trim()) || currentVersion; const versionFile = './temp-version.txt'; fs.writeFileSync(versionFile, newVersion); console.log(newVersion); })\"",
+    "version": "npm run version-prompt-file --ignore-scripts && node -e \"const fs = require('fs'); const semver = require('semver'); const currentVersion = require('./package.json').version; const versionFile = './temp-version.txt'; try { const newVersion = fs.readFileSync(versionFile, 'utf8').trim(); fs.unlinkSync(versionFile); require('fs').writeFileSync('./package.json', JSON.stringify(Object.assign(require('./package.json'), { version: newVersion }), null, 2)); } catch (error) { console.error('Error reading or deleting version file:', error); process.exit(1); }\" && git add package.json && git commit --amend --no-edit",
+    "changelog": "auto-changelog --sort-commits date && git add CHANGELOG.md && git commit --amend --no-edit",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet"
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +55,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "auto-changelog": {
+    "output": "CHANGELOG.md",
+    "template": "keepachangelog",
+    "unreleased": true,
+    "commitLimit": false
   }
 }
