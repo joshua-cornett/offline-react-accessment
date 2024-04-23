@@ -1,6 +1,6 @@
 {
   "name": "solution",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Joshua Cornett",
   "description": "Offline assessment taken in pursuit of a front-end position with Microsoft",
   "homepage": "https://github.com/joshua-cornett/offline-react-accessment",
@@ -13,19 +13,22 @@
     "eslint-plugin-jsx-a11y": "*",
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
-    "prettier": "*"
+    "husky": "^9.0.11",
+    "jest": "^27.5.1",
+    "jsdoc": "^4.0.2",
+    "prettier": "^3.2.5"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "auto-changelog": "*",
+    "prompt": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "auto-changelog": "*",
-    "prompt": "*",
-    "semver": "*"
+    "semver": "*",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,7 +39,9 @@
     "version": "npm run version-prompt-file --ignore-scripts && node -e \"const fs = require('fs'); const semver = require('semver'); const currentVersion = require('./package.json').version; const versionFile = './temp-version.txt'; try { const newVersion = fs.readFileSync(versionFile, 'utf8').trim(); fs.unlinkSync(versionFile); require('fs').writeFileSync('./package.json', JSON.stringify(Object.assign(require('./package.json'), { version: newVersion }), null, 2)); } catch (error) { console.error('Error reading or deleting version file:', error); process.exit(1); }\" && git add package.json && git commit --amend --no-edit",
     "changelog": "auto-changelog --sort-commits date && git add CHANGELOG.md && git commit --amend --no-edit",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet"
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet",
+    "docs": "jsdoc -c jsdoc.config.json",
+    "stage": "npm run format && npm run docs && npm run version && git add . && node -e \"Ready for commit. DON'T FORGET TO RUN npm run changelog AFTERWARDS!\""
   },
   "eslintConfig": {
     "extends": [
