@@ -1,15 +1,24 @@
-// src/App.jsx
-
-import React from 'react';
+import EntriesTable from './components/EntriesTable';
 import Form from './components/Form';
 
-function App() {
+/**
+ * Root component serving as the app's entry point.
+ * It contains the main Form component and a title header.
+ *
+ * @component
+ * @example
+ * return (
+ *   <App />
+ * )
+ */
+
+const App = () => {
   return (
     <div className="App">
-      <h1>Awesome Form</h1>
       <Form />
+      <EntriesTable />
     </div>
   );
-}
+};
 
 export default App;
