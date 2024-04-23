@@ -26,71 +26,92 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import Name from './Name';
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import Name from './Name';
 import Location from './Location';
-import { useValidateName } from '../hooks/useValidateName';
+import { useName } from '../hooks/useName';
+import { useLocations } from '../hooks/useLocations';
 
 /**
- * Main form component.
- * Handles form structure and submission logic.
+ * Form component for name, location, clearing, and submission
  *
- * @component
+ * Ensures that submissions are only processed when validations are passed.
+ * Will only clear when input is present.
+ *
+ * @returns {JSX.Element} The complete form which contains:
+ * -- Name input component
+ * -- Locations input component
+ * -- Clear and Submit buttons
  */
 const Form = () => {
-  const { name, setName, isNameValid, validating } = useValidateName();
-
-  // Destructure name input data/validation from custom hook
+  // State and methods from custom hooks
+  const { name, setName, isNameValid, validating } = useName(); // Updated to use useName
+  const { locations, selectedLocation, setSelectedLocation } = useLocations();
 
   /**
-   * @todo Destructure location data from a custom hook
+   * Handles changes to the name input field, triggering validation.
+   *
+   * @param {string} newName - The new name entered by the user.
    */
-
   const handleNameChange = (newName) => {
-    setName(newName);
+    setName(newName); // Update name state, which triggers debounced validation
   };
 
   /**
-   * Handles form submission, preventing default behavior and ensuring validation.
+   * Handles the form submission event. Validates the state before processing submission.
+   * Alerts the user if submission cannot proceed due to validation or if it succeeds.
    *
-   * @param {React.FormEvent&lt;HTMLFormElement>} event - Form submission event.
+   * @param {React.FormEvent&lt;HTMLFormElement>} event - The form submission event.
    */
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (!isNameValid) {
-      console.log('Please correct the errors before submitting.');
+    if (validating || !isNameValid) {
+      console.log(
+        'Validation in progress or name is invalid. Please correct the errors before submitting.',
+      );
       return;
     }
     console.log(
-      `Submitting Name: ${name} with Location: ${/**@todo Track location selection */ ''}`,
+      `Form submitted successfully with Name: ${name} and Location: ${selectedLocation}`,
     );
   };
 
+  /**
+   * Clears all inputs and resets the form state.
+   */
+  const handleClear = () => {
+    setName('');
+    setSelectedLocation('');
+  };
+
   return (
-    &lt;div className="App">
-      &lt;h1>Awesome Form&lt;/h1>
-      &lt;form onSubmit={handleSubmit}>
-        &lt;Name
-          name={name}
-          onChange={handleNameChange}
-          isValid={isNameValid}
-          validating={validating}
-        />
-        &lt;Location
-          locations={/**@todo Populate list of locations from custom hook */ []}
-          loading={true}
-        />
-        &lt;button type="clear">Clear&lt;/button>
-        &lt;button
-          type="submit"
-          disabled={
-            validating /**@todo Also ensure locations loaded and selected */
-          }
-        >
-          Submit
-        &lt;/button>
-      &lt;/form>
-    &lt;/div>
+    &lt;form onSubmit={handleSubmit}>
+      {/* Name input component with validation */}
+      &lt;Name
+        name={name}
+        onChange={handleNameChange}
+        isValid={isNameValid}
+        validating={validating}
+      />
+      {/* Location selection dropdown */}
+      &lt;Location
+        locations={locations}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+      />
+      {/* Clear button, disabled if no input */}
+      &lt;button
+        type="button"
+        onClick={handleClear}
+        disabled={!name &amp;&amp; !selectedLocation}
+      >
+        Clear
+      &lt;/button>
+      {/* Submit button, disabled if name is still validating */}
+      &lt;button type="submit" disabled={validating}>
+        Add
+      &lt;/button>
+    &lt;/form>
   );
 };
 
@@ -105,13 +126,13 @@ export default Form;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#EntriesTable">EntriesTable</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useValidateName">useValidateName</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 13:27:37 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 16:23:00 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

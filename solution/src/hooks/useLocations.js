@@ -4,7 +4,10 @@ import { getLocations } from '../mock-api/apis'; // Import function from mock AP
 /**
  * Custom hook for fetching and managing locations.
  *
- * @returns {object} Object containing the list of locations and the selected location setter and getter.
+ * @returns {object} Object containing:
+ *  - locations (string[]): An array of valid locations.
+ *  - selectedLocation (string): The currently selected location.
+ *  - setSelectedLocation (function): Sets the selected location.
  */
 export const useLocations = () => {
   const [locations, setLocations] = useState([]);
@@ -18,7 +21,7 @@ export const useLocations = () => {
       try {
         const locs = await getLocations(); // Call the mock API to get locations
         setLocations(locs);
-        setSelectedLocation(locs[0]); // Default to the first location
+        setSelectedLocation(''); // Default to empty
       } catch (error) {
         console.error('Failed to fetch locations:', error);
       }

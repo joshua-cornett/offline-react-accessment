@@ -1,5 +1,5 @@
 /**
- * Table component that displays entries of names and locations.
+ * Submissions component that displays prior submissions of names and locations.
  * Fetches and displays prior submission data, reflecting updates to entries.
  *
  * @component
@@ -13,7 +13,7 @@
     </div>
   )
  */
-const EntriesTable = () => {
+const Submissions = () => {
   return (
     <table>
       <thead>
@@ -32,4 +32,4 @@ const EntriesTable = () => {
   );
 };
 
-export default EntriesTable;
+export default Submissions;

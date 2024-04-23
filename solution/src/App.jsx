@@ -1,4 +1,4 @@
-import EntriesTable from './components/EntriesTable';
+import Submissions from './components/Submissions';
 import Form from './components/Form';
 
 /**
@@ -16,7 +16,7 @@ const App = () => {
   return (
     <div className="App">
       <Form />
-      <EntriesTable />
+      <Submissions />
     </div>
   );
 };

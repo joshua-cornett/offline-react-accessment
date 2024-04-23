@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/Location.jsx</title>
+    <title>JSDoc: Source: components/Submissions.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/Location.jsx</h1>
+    <h1 class="page-title">Source: components/Submissions.jsx</h1>
 
     
 
@@ -27,40 +27,40 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Location selection component that uses a custom hook to fetch and display locations.
+ * Submissions component that displays prior submissions of names and locations.
+ * Fetches and displays prior submission data, reflecting updates to entries.
  *
- * @param {Array} locations - Array of location strings to populate the dropdown.
- * @param {string} selectedLocation - The currently selected location in the dropdown.
- * @param {function} setSelectedLocation - Function to update the selected location state.
- * @returns {JSX.Element} The dropdown menu component for location selection.
- */
-const Location = ({ locations, selectedLocation, setSelectedLocation }) => {
-  return (
-    &lt;div>
-      &lt;label htmlFor="location-select">Choose a location:&lt;/label>
-      &lt;select
-        id="location-select"
-        value={selectedLocation}
-        onChange={(e) => setSelectedLocation(e.target.value)}
-      >
-        {/* Default empty option, also set on clear */}
-        {selectedLocation === '' &amp;&amp; (
-          &lt;option value="" disabled>
-            Select a location...
-          &lt;/option>
-        )}
-        {/* Option elements for each location */}
-        {locations.map((location, index) => (
-          &lt;option key={index} value={location}>
-            {location}
-          &lt;/option>
-        ))}
-      &lt;/select>
+ * @component
+ * @example
+ * return (
+    &lt;div className="App">
+      &lt;h1>Awesome Form&lt;/h1>
+      &lt;Form />
+      &lt;h2>Prior Submissions&lt;/h2>
+      &lt;EntriesTable />
     &lt;/div>
+  )
+ */
+const Submissions = () => {
+  return (
+    &lt;table>
+      &lt;thead>
+        &lt;tr>
+          &lt;th colSpan="2">Prior Submissons&lt;/th>
+        &lt;/tr>
+        &lt;tr>
+          &lt;th>Name&lt;/th>
+          &lt;th>Location&lt;/th>
+        &lt;/tr>
+      &lt;/thead>
+      &lt;tbody>
+        {/** @todo Map over entries to populate rows (will likely use caching) */}
+      &lt;/tbody>
+    &lt;/table>
   );
 };
 
-export default Location;
+export default Submissions;
 </code></pre>
         </article>
     </section>

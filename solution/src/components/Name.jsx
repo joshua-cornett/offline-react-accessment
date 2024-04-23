@@ -1,10 +1,10 @@
 /**
- * Component for inputting user's name with asynchronous validation.
+ * Name input component with asynchronous validation.
  *
  * @param {string} name - Current name value.
  * @param {function} onChange - Handler to update name.
  * @param {boolean} isValid - Current validation state.
- * @param {boolean} validating - Indicates if validation is in progress.
+ * @param {boolean} validating - Flag to indicate if currently validating.
  * @component
  */
 const Name = ({ name, onChange, isValid, validating }) => {
@@ -17,8 +17,9 @@ const Name = ({ name, onChange, isValid, validating }) => {
         value={name}
         onChange={(e) => onChange(e.target.value)}
       />
+      {/* Name validation status */}
       <p style={{ color: validating ? 'blue' : isValid ? 'green' : 'red' }}>
-        {validating ? 'Validating...' : isValid ? 'Valid' : 'Invalid'}
+        {validating ? 'Checking...' : isValid ? 'Valid' : 'Invalid'}
       </p>
     </div>
   );

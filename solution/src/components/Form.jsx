@@ -1,68 +1,89 @@
+import React from 'react';
 import Name from './Name';
 import Location from './Location';
-import { useValidateName } from '../hooks/useValidateName';
+import { useName } from '../hooks/useName';
+import { useLocations } from '../hooks/useLocations';
 
 /**
- * Main form component.
- * Handles form structure and submission logic.
+ * Form component for name, location, clearing, and submission
  *
- * @component
+ * Ensures that submissions are only processed when validations are passed.
+ * Will only clear when input is present.
+ *
+ * @returns {JSX.Element} The complete form which contains:
+ * -- Name input component
+ * -- Locations input component
+ * -- Clear and Submit buttons
  */
 const Form = () => {
-  const { name, setName, isNameValid, validating } = useValidateName();
-
-  // Destructure name input data/validation from custom hook
+  // State and methods from custom hooks
+  const { name, setName, isNameValid, validating } = useName(); // Updated to use useName
+  const { locations, selectedLocation, setSelectedLocation } = useLocations();
 
   /**
-   * @todo Destructure location data from a custom hook
+   * Handles changes to the name input field, triggering validation.
+   *
+   * @param {string} newName - The new name entered by the user.
    */
-
   const handleNameChange = (newName) => {
-    setName(newName);
+    setName(newName); // Update name state, which triggers debounced validation
   };
 
   /**
-   * Handles form submission, preventing default behavior and ensuring validation.
+   * Handles the form submission event. Validates the state before processing submission.
+   * Alerts the user if submission cannot proceed due to validation or if it succeeds.
    *
-   * @param {React.FormEvent<HTMLFormElement>} event - Form submission event.
+   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
    */
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (!isNameValid) {
-      console.log('Please correct the errors before submitting.');
+    if (validating || !isNameValid) {
+      console.log(
+        'Validation in progress or name is invalid. Please correct the errors before submitting.',
+      );
       return;
     }
     console.log(
-      `Submitting Name: ${name} with Location: ${/**@todo Track location selection */ ''}`,
+      `Form submitted successfully with Name: ${name} and Location: ${selectedLocation}`,
     );
   };
 
+  /**
+   * Clears all inputs and resets the form state.
+   */
+  const handleClear = () => {
+    setName('');
+    setSelectedLocation('');
+  };
+
   return (
-    <div className="App">
-      <h1>Awesome Form</h1>
-      <form onSubmit={handleSubmit}>
-        <Name
-          name={name}
-          onChange={handleNameChange}
-          isValid={isNameValid}
-          validating={validating}
-        />
-        <Location
-          locations={/**@todo Populate list of locations from custom hook */ []}
-          loading={true}
-        />
-        <button type="clear">Clear</button>
-        <button
-          type="submit"
-          disabled={
-            validating /**@todo Also ensure locations loaded and selected */
-          }
-        >
-          Submit
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      {/* Name input component with validation */}
+      <Name
+        name={name}
+        onChange={handleNameChange}
+        isValid={isNameValid}
+        validating={validating}
+      />
+      {/* Location selection dropdown */}
+      <Location
+        locations={locations}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+      />
+      {/* Clear button, disabled if no input */}
+      <button
+        type="button"
+        onClick={handleClear}
+        disabled={!name && !selectedLocation}
+      >
+        Clear
+      </button>
+      {/* Submit button, disabled if name is still validating */}
+      <button type="submit" disabled={validating}>
+        Add
+      </button>
+    </form>
   );
 };
 
