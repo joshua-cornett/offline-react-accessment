@@ -1,30 +1,28 @@
+import { useLocations } from '../hooks/useLocations';
+
 /**
- * Dropdown component for selecting a location.
- * Populated by the mock API.
- * Utilizes context to handle submission.
+ * Location selection component that uses a custom hook to fetch and display locations.
  *
- * @component
- * @param {{locations: Array<{id: string, name: string}>, loading: boolean}} props - Props object.
- * @param {Array<{id: string, name: string}>} props.locations - Array of available locations.
- * @param {boolean} props.loading - Locations loading status
- * @example
- * return (
-    <form onSubmit={handleSubmit}>
-        <Location locations={[]} loading={true} />
-    </form>
-  )
+ * @returns {JSX.Element} Dropdown menu for selecting a location.
  */
-const Location = (locations, loading) => {
+const Location = () => {
+  const { locations, selectedLocation, setSelectedLocation } = useLocations();
+
   return (
     <div>
-      <label htmlFor="location">Location:</label>
-      {loading ? (
-        <p>In development</p>
-      ) : (
-        <select id="location" name="location">
-          {/**@todo Map over locations passed in props */}
-        </select>
-      )}
+      <label htmlFor="location-select">Choose a location:</label>
+      <select
+        id="location-select"
+        value={selectedLocation}
+        onChange={(e) => setSelectedLocation(e.target.value)}
+      >
+        {/* Option elements for each location */}
+        {locations.map((location, index) => (
+          <option key={index} value={location}>
+            {location}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "solution",
-  "version": "1.1.0",
+  "version": "1.1.5",
   "author": "Joshua Cornett",
   "description": "Offline assessment taken in pursuit of a front-end position with Microsoft",
   "homepage": "https://github.com/joshua-cornett/offline-react-accessment",
@@ -40,7 +40,8 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet",
     "docs": "jsdoc -c jsdoc.config.json",
-    "stage": "npm run format && npm run docs && npm run version && git add . && node -e \"console.log('Ready for commit - DON\\'T FORGET TO RUN npm run changelog AFTERWARDS!')\""
+    "precommit": "npm run format && npm run docs && git add . && node -e \"console.log('Ready for commit - DON\\'T FORGET TO RUN npm run postcommit AFTERWARDS!')\"",
+    "postcommit": "npm run version && git add package.json && npm run changelog"
   },
   "eslintConfig": {
     "extends": [
