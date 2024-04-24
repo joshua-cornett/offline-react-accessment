@@ -1,31 +1,35 @@
+import React from 'react';
+
 /**
- * Name input component with asynchronous validation.
+ * Name input component with asynchronous validation and availability check.
  *
- * @component
  * @param {string} name - Current name value.
  * @param {function} onChange - Handler to update name.
- * @param {boolean} isValid - Current validation state.
- * @param {boolean} validating - Flag to indicate if currently validating.
- * @returns {JSX.Element} - Input element with validation
+ * @param {boolean} isValid - Current validation state of the name.
+ * @param {boolean} isAvailable - Availability state of the name.
+ * @param {boolean} isValidating - Flag indicating if validation is in progress.
+ * @returns {JSX.Element} Input element for name and status messages.
  */
-const Name = ({ name, onChange, isValid, isAvailable, isValidating }) => {
+const Name = ({ name, onChange, status }) => {
   return (
-    <div>
+    <div className="input-group">
       <label htmlFor="name">Name:</label>
-      <input
-        type="text"
-        id="name"
-        value={name}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {/* Name validation status */}
-      <p style={{ color: isValidating ? 'blue' : isValid ? 'green' : 'red' }}>
-        {isValidating ? 'Checking Validity...' : isValid ? 'Valid' : 'Invalid'}
-      </p>
-      {/* Name availability status */}
-      <p style={{ color: isAvailable ? 'red' : 'green' }}>
-        {isValid ? 'Available' : 'Unavailable'}
-      </p>
+      <div className="text-field">
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={name}
+          onChange={(e) => onChange(e.target.value)}
+          className={!name ? 'flash-grey' : ''}
+          placeholder="Enter name"
+        />
+        {status.message && (
+          <p className="status-message" style={{ color: status.color }}>
+            {status.message}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

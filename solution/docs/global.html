@@ -352,8 +352,9 @@
 
 
 <div class="description">
-    <p>Custom hook for name input validation and management.
-Implements debouncing and out-of-order validation aborts</p>
+    <p>Custom hook for managing the name input's validation and availability.
+It performs debouncing to minimize excessive validation requests and directly
+checks name availability against stored submissions.</p>
 </div>
 
 
@@ -391,70 +392,7 @@ Implements debouncing and out-of-order validation aborts</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="hooks_useName.js.html">hooks/useName.js</a>, <a href="hooks_useName.js.html#line16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="useSubmissions"><span class="type-signature">(constant) </span>useSubmissions<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Custom submissions hook
-Handles new submissions, checks for duplicates, and caches submissions in localStorage.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="hooks_useSubmissions.js.html">hooks/useSubmissions.js</a>, <a href="hooks_useSubmissions.js.html#line11">line 11</a>
+        <a href="hooks_useName.js.html">hooks/useName.js</a>, <a href="hooks_useName.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -578,7 +516,7 @@ It contains the main Form component and a title header.</p>
     
 
     
-    <h4 class="name" id="Form"><span class="type-signature"></span>Form<span class="signature">(onNewSubmission)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    <h4 class="name" id="Form"><span class="type-signature"></span>Form<span class="signature">()</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
     
 
     
@@ -596,55 +534,6 @@ Validates and processes submissions based on user input and validation status.</
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onNewSubmission</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Callback function to handle form submission data.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -680,7 +569,7 @@ Validates and processes submissions based on user input and validation status.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Form.jsx.html">components/Form.jsx</a>, <a href="components_Form.jsx.html#line14">line 14</a>
+        <a href="components_Form.jsx.html">components/Form.jsx</a>, <a href="components_Form.jsx.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -885,7 +774,7 @@ Validates and processes submissions based on user input and validation status.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Location.jsx.html">components/Location.jsx</a>, <a href="components_Location.jsx.html#line10">line 10</a>
+        <a href="components_Location.jsx.html">components/Location.jsx</a>, <a href="components_Location.jsx.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -943,7 +832,7 @@ Validates and processes submissions based on user input and validation status.</
     
 
     
-    <h4 class="name" id="Name"><span class="type-signature"></span>Name<span class="signature">(name, onChange, isValid, validating)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    <h4 class="name" id="Name"><span class="type-signature"></span>Name<span class="signature">(name, onChange, isValid, isAvailable, isValidating)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
     
 
     
@@ -951,7 +840,7 @@ Validates and processes submissions based on user input and validation status.</
 
 
 <div class="description">
-    <p>Name input component with asynchronous validation.</p>
+    <p>Name input component with asynchronous validation and availability check.</p>
 </div>
 
 
@@ -1049,14 +938,14 @@ Validates and processes submissions based on user input and validation status.</
 
             
 
-            <td class="description last"><p>Current validation state.</p></td>
+            <td class="description last"><p>Current validation state of the name.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>validating</code></td>
+                <td class="name"><code>isAvailable</code></td>
             
 
             <td class="type">
@@ -1072,7 +961,30 @@ Validates and processes submissions based on user input and validation status.</
 
             
 
-            <td class="description last"><p>Flag to indicate if currently validating.</p></td>
+            <td class="description last"><p>Availability state of the name.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isValidating</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Flag indicating if validation is in progress.</p></td>
         </tr>
 
     
@@ -1113,7 +1025,7 @@ Validates and processes submissions based on user input and validation status.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Name.jsx.html">components/Name.jsx</a>, <a href="components_Name.jsx.html#line11">line 11</a>
+        <a href="components_Name.jsx.html">components/Name.jsx</a>, <a href="components_Name.jsx.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -1142,9 +1054,7 @@ Validates and processes submissions based on user input and validation status.</
 
         
 <div class="param-desc">
-    <ul>
-<li>Input element with validation</li>
-</ul>
+    <p>Input element for name and status messages.</p>
 </div>
 
 
@@ -1275,7 +1185,7 @@ Fetches and displays prior submission data, reflecting updates to entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Submissions.jsx.html">components/Submissions.jsx</a>, <a href="components_Submissions.jsx.html#line9">line 9</a>
+        <a href="components_Submissions.jsx.html">components/Submissions.jsx</a>, <a href="components_Submissions.jsx.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -1525,13 +1435,13 @@ Fetches and displays prior submission data, reflecting updates to entries.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li><li><a href="global.html#useSubmissions">useSubmissions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 17:47:47 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Apr 24 2024 07:54:50 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

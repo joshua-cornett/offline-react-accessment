@@ -12,6 +12,7 @@ import { getLocations } from '../mock-api/apis'; // Import function from mock AP
 export const useLocations = () => {
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     /**
@@ -30,9 +31,16 @@ export const useLocations = () => {
     fetchLocations();
   }, []);
 
+  const handleSetSelectedLocation = (location) => {
+    setSelectedLocation(location);
+    if (showError) {
+      setShowError(false); // Automatically reset error on successful selection
+    }
+  };
+
   return {
     locations,
     selectedLocation,
-    setSelectedLocation,
+    setSelectedLocation: handleSetSelectedLocation,
   };
 };

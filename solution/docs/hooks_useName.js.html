@@ -26,85 +26,100 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { useState, useEffect, useRef } from 'react';
+            <pre class="prettyprint source linenums"><code>import { useState, useEffect } from 'react';
 import { isNameValid as API_validateName } from '../mock-api/apis';
 import { useDebounce } from './useDebouncing';
-import { useSubmissions } from './useSubmissions';
+import { useSubmissions } from '../contexts/SubmissionsContext';
 
 /**
- * Custom hook for name input validation and management.
- * Implements debouncing and out-of-order validation aborts
+ * Custom hook for managing the name input's validation and availability.
+ * It performs debouncing to minimize excessive validation requests and directly
+ * checks name availability against stored submissions.
  *
- * @returns {object} Object containing:
- *  - name (string): The current name.
- *  - setName (Function): Setter for the name.
- *  - isNameValid (boolean|null): The validation status, null without input.
- *  - validating (boolean): Flag indicating if currently validating
+ * @returns {object} Contains the current name state, validation status, availability,
+ * and flags for ongoing validation.
  */
 export const useName = () => {
-  // State management and custom hooks
+  // State to store the current name value
   const [name, setName] = useState('');
+  // State to store the validation status of the current name
   const [isNameValid, setIsNameValid] = useState(null);
+  // State to store the availability status of the current name
   const [isNameAvailable, setIsNameAvailable] = useState(true);
+  // State to indicate whether validation is currently being performed
   const [validating, setValidating] = useState(false);
-  const debouncedName = useDebounce(name, 100); // Debouncing the name input to reduce frequency of validation calls.
-  const validationSeq = useRef(0); // Sequence number to track the latest validation request.
-  const { checkNameAvailability } = useSubmissions(); // Assume this method is available
+  // The debounced version of the name, used to reduce frequency of validation calls
+  const debouncedName = useDebounce(name, 300);
+  // Utilize the checkNameAvailability function from useSubmissions hook
+  const { checkNameAvailability } = useSubmissions();
+
+  // Additional state to manually control the status message
+  const [manualStatus, setManualStatus] = useState(null);
+
+  // Function to determine the status message and color based on current validation state
+  const getStatusMessage = () => {
+    if (!debouncedName) {
+      return { message: 'Please enter a name', color: 'gray' }; // Guidance when input is empty
+    }
+    if (validating) {
+      return { message: 'Checking...', color: 'blue' };
+    }
+    if (!isNameValid &amp;&amp; debouncedName) {
+      return { message: 'Invalid', color: 'red' }; // Invalid state when there's some input
+    }
+    if (!isNameAvailable) {
+      return { message: 'Unavailable', color: 'orange' };
+    }
+    if (isNameValid &amp;&amp; isNameAvailable) {
+      return { message: 'Available', color: 'green' };
+    }
+    return { message: '', color: 'black' }; // Default case
+  };
 
   useEffect(() => {
-    const controller = new AbortController(); // AbortController to manage fetch cancellations.
-    const currentSeq = ++validationSeq.current; // Increment sequence number for new validation requests.
+    if (manualStatus) {
+      return; // If manual status is set, skip the automatic status setting
+    }
 
-    // Function to perform name input validation.
-    const performValidation = async () => {
-      if (!debouncedName) {
-        // If no debounce, stop validating.
-        setIsNameValid(null);
-        setIsNameAvailable(checkNameAvailability(debouncedName));
+    // If debouncedName is falsy, reset validation and availability
+    if (!debouncedName) {
+      setIsNameValid(null); // Avoid setting as 'Invalid'
+      setIsNameAvailable(true);
+      setValidating(false);
+      setManualStatus({ message: 'Please enter a name', color: 'gray' });
 
+      return;
+    }
+
+    // Start validating when name changes
+    setValidating(true);
+
+    // Perform the validation via API
+    API_validateName(debouncedName)
+      .then((isValid) => {
+        setIsNameValid(isValid); // Update the validity
+        setIsNameAvailable(checkNameAvailability(debouncedName)); // Directly check availability
+        setValidating(false); // Mark the end of the validation
+        setManualStatus(null); // Clear manual status once validation completes
+      })
+      .catch((error) => {
+        // Handle any errors during validation
+        console.error('Validation error:', error);
+        setIsNameValid(false);
         setValidating(false);
-        return;
-      }
-
-      setValidating(true); // Indicate validation start (prevents apparent feedback lag)
-      setIsNameAvailable(true); // Empty name is not a duplicate by default
-
-      try {
-        const result = await API_validateName(debouncedName, {
-          signal: controller.signal,
-        }); // Perform the validation call with an abort signal.
-        if (currentSeq === validationSeq.current) {
-          // Finalize validation
-          setIsNameValid(result); // Set the validation result.
-          setValidating(false); // Reset the validating flag once validation is complete.
-        }
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          // Handle errors that are not aborts.
-          console.error('Error validating name:', error);
-          if (currentSeq === validationSeq.current) {
-            // Stop validation on error.
-            setIsNameValid(false);
-            setValidating(false);
-          }
-        }
-      }
-    };
-
-    performValidation(); // Execute the validation function.
-
-    return () => {
-      controller.abort(); // Abort fetch on change or unmount.
-    };
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedName]); // Effect triggered by debounce
+  }, [debouncedName]); // This effect depends on debouncedName, which updates on name change
+
+  // Determine if the name is ready for submission
+  const ready = !validating &amp;&amp; isNameValid &amp;&amp; isNameAvailable;
 
   return {
     name,
     setName,
-    isNameValid,
-    isNameAvailable,
-    validating,
+    ready,
+    status: manualStatus || getStatusMessage(),
+    setManualStatus,
   };
 };
 </code></pre>
@@ -117,13 +132,13 @@ export const useName = () => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li><li><a href="global.html#useSubmissions">useSubmissions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 17:47:47 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Apr 24 2024 07:54:50 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

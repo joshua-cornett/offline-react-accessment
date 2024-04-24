@@ -3,7 +3,7 @@ import './App.css'; // You cannot defeat my shtyle!
 import Form from './components/Form';
 
 import Submissions from './components/Submissions';
-import { useSubmissions } from './hooks/useSubmissions';
+import { SubmissionsProvider } from './contexts/SubmissionsContext';
 
 /**
  * Root component serving as the app's entry point.
@@ -17,11 +17,12 @@ import { useSubmissions } from './hooks/useSubmissions';
  */
 
 const App = () => {
-  const { submissions, addSubmission } = useSubmissions();
   return (
     <div className="App">
-      <Form onNewSubmission={addSubmission} />
-      <Submissions entries={submissions} />
+      <SubmissionsProvider>
+        <Form />
+        <Submissions />
+      </SubmissionsProvider>
     </div>
   );
 };

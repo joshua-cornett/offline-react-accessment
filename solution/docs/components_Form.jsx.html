@@ -26,7 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react';
+            <pre class="prettyprint source linenums"><code>import { useSubmissions } from '../contexts/SubmissionsContext';
 import Name from './Name';
 import Location from './Location';
 import { useName } from '../hooks/useName';
@@ -36,61 +36,64 @@ import { useLocations } from '../hooks/useLocations';
  * Form component for name, location, clearing, and submission.
  * Validates and processes submissions based on user input and validation status.
  *
- * @param {function} onNewSubmission - Callback function to handle form submission data.
  * @returns {JSX.Element} The complete form including input components for name and location, and control buttons.
  */
-const Form = ({ addSubmission }) => {
-  const { name, setName, isNameValid, isNameAvailable, validating } = useName();
+const Form = () => {
+  const { addSubmission, clearSubmissions } = useSubmissions();
+
+  const {
+    name,
+    setName,
+    ready: isNameReady,
+    status: nameStatus,
+    setManualStatus,
+  } = useName();
+
   const { locations, selectedLocation, setSelectedLocation } = useLocations();
-  const isLocationValid = selectedLocation !== ''; // Ensure the location is not empty
 
   const handleNameChange = (newName) => {
     setName(newName); // Update name state and trigger validation
+    setManualStatus(); // Reset status when user types again
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!validating &amp;&amp; isNameValid &amp;&amp; isLocationValid &amp;&amp; isNameAvailable) {
+    if (isNameReady &amp;&amp; selectedLocation !== '') {
       addSubmission({ name, location: selectedLocation });
+      setManualStatus({ message: 'Submitted', color: 'magenta' }); // Set status to "Submitted" on successful submission
     } else {
-      console.log(
+      console.error(
         'Validation in progress, or inputs are invalid. Submission not allowed.',
       );
     }
   };
 
   const handleClear = () => {
+    clearSubmissions();
     setName('');
     setSelectedLocation('');
+    setManualStatus({ message: 'Please enter a name.', color: '' }); // Set status to "Submitted" on successful submission
   };
 
   return (
     &lt;form onSubmit={handleSubmit}>
-      &lt;Name
-        name={name}
-        onChange={handleNameChange}
-        isValid={isNameValid}
-        isAvailable={isNameAvailable}
-        validating={validating}
-      />
-      &lt;Location
-        locations={locations}
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
-      />
-      &lt;button
-        type="button"
-        onClick={handleClear}
-        disabled={!name &amp;&amp; !selectedLocation}
-      >
-        Clear
-      &lt;/button>
-      &lt;button
-        type="submit"
-        disabled={validating || !isNameValid || !isLocationValid}
-      >
-        Add
-      &lt;/button>
+      &lt;div className="form-row">
+        &lt;Name name={name} onChange={handleNameChange} status={nameStatus} />
+
+        &lt;Location
+          locations={locations}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+        />
+      &lt;/div>
+      &lt;div className="buttons">
+        &lt;button type="button" onClick={handleClear} disabled={false}>
+          Clear
+        &lt;/button>
+        &lt;button type="submit" disabled={!isNameReady || !selectedLocation}>
+          Add
+        &lt;/button>
+      &lt;/div>
     &lt;/form>
   );
 };
@@ -106,13 +109,13 @@ export default Form;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li><li><a href="global.html#useSubmissions">useSubmissions</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Form">Form</a></li><li><a href="global.html#Location">Location</a></li><li><a href="global.html#Name">Name</a></li><li><a href="global.html#Submissions">Submissions</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#isNameValid">isNameValid</a></li><li><a href="global.html#root">root</a></li><li><a href="global.html#useDebounce">useDebounce</a></li><li><a href="global.html#useLocations">useLocations</a></li><li><a href="global.html#useName">useName</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 23 2024 17:47:47 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Apr 24 2024 07:54:50 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
