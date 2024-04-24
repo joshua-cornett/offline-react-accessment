@@ -1,76 +1,266 @@
-/* Overall layout styles */
-
 .App {
-  font-family: Arial, sans-serif;
-  margin: 2rem;
-  max-width: 600px;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  font-family: 'Comic Sans MS';
+  font-weight: 600;
+  padding: 10dvw 10dvh;
   display: flex;
+  box-sizing: border-box;
+  gap: 20px;
+  flex-wrap: wrap;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-content: center;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Styles for form components */
 form {
   display: flex;
+  width: 100%;
+  max-width: 900px;
   flex-direction: column;
-  gap: 1rem;
+  gap: 20px;
 }
 
-input[type='text'],
-select {
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.input-group {
+  display: flex;
+  flex-flow: wrap;
   width: 100%;
-  padding: 8px;
+  gap: 10px;
+  flex-direction: row;
+}
+
+.input-group label {
+  display: flex;
+  flex-basis: 10%;
+  min-width: 100px;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.text-field,
+select {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+input,
+select {
+  font-family: 'Comic Sans MS';
+  border: 3px solid black;
+}
+
+.status-message {
+  margin: 0;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: gray;
 }
 
 .buttons {
   display: flex;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
-/* Submission table styles */
+button {
+  font-family: 'Comic Sans MS';
+  font-weight: bold;
+  padding: 5px 10px;
+  border: 3px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #ffffff;
+  box-shadow: 4px 4px 0 0 black;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background-color: #ccc;
+}
+
+button:disabled {
+  color: #666;
+  background-color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+  border: 3px dashed #666;
+}
+
+.submissions-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-basis: 676px;
+  border: 3px solid black;
+  border-radius: 5px;
+}
+
 table {
   width: 100%;
-  border-collapse: collapse;
+  /* max-width: 676px; */
+  /* border-radius: 10px; */
+  /* overflow: hidden; */
+  border-spacing: 0;
+  /* box-sizing: border-box; */
+}
+
+thead th {
+  background-color: #cccccc;
+  text-align: left;
+  padding: 0 5px 5px 5px;
+  line-height: 1;
+}
+
+thead th:nth-child(2) {
+  border-left: 3px solid black;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #eeeeee;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+tbody tr td:nth-child(even) {
+  border-left: 3px solid black;
 }
 
 th,
 td {
-  border: 1px solid #ddd;
   padding: 8px;
 }
 
-th {
-  background-color: #f2f2f2;
+/* Dropdown container styles */
+.location-dropdown {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+  flex-flow: wrap;
+  width: 100%;
+  gap: 10px;
+  flex-direction: row;
+}
+
+.location-label {
+  display: flex;
+  display: flex;
+  flex-basis: 10%;
+  min-width: 100px;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.dropdown-container {
+  /* position: relative; */
+  display: flex;
+  /* width: 200px; */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.dropdown-field {
+  display: flex;
+  flex-grow: 1;
+  /* flex-direction: column; */
+}
+
+.dropdown-toggle {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 4px 2px;
+  line-height: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Comic Sans MS';
+  font-weight: bold;
+  /* padding: 5px 10px; */
+  border: 3px solid black;
+  border-radius: 0;
+  cursor: pointer;
+  background-color: #ffffff;
+  box-shadow: none;
+  transition: all 0.3s;
+}
+
+/* Create a vertical separator using ::before */
+.dropdown-toggle::before {
+  content: '';
+  position: absolute;
+  right: 20px; /* Position left of the arrow */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%; /* Adjust height as needed */
+  width: 2px; /* Width of the separator line */
+  background-color: black; /* Color of the separator */
+}
+
+.dropdown-toggle::after {
+  content: '';
+  position: absolute;
+  right: 6px; /* Distance from the right edge of the button */
+  top: 50%; /* Center vertically */
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black; /* Adjust color as necessary */
+  transform: translateY(-50%); /* Center the arrow vertically */
+}
+
+/* Rotate arrow when dropdown is open */
+.dropdown-toggle.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  width: 20%;
+  border: 3px solid black;
+  min-width: 150px;
+  /* border: 1px solid #ccc; */
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  /* flex-basis: 300px; */
+}
+
+/* Dropdown item styles */
+.dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+@keyframes flashGrey {
+  0%,
+  100% {
+    border-color: rgba(192, 190, 190, 0.816);
+  }
+  50% {
+    border-color: black;
+  }
+}
+
+.flash-grey {
+  animation: flashGrey 2s infinite;
 }
