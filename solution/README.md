@@ -5,7 +5,7 @@ This is something I built in pursuit of a front-end job with a certain tech comp
 ## Features
 
 - Dynamic form handling
-- Real-time validation with visual feedback
+- Real-time asynchronus validation with visual feedback
 - Custom dropdown component with accessibility considerations
 - Local storage integration for session persistence
 - Flashing animations for user input guidance
@@ -18,7 +18,7 @@ Navigate to the /docs directory after cloning the repository or open the HTML fi
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development, testing, or evaluation purposes.
 
 ### Prerequisites
 
@@ -30,8 +30,8 @@ npm (Node Package Manager, comes with node.js installation)`
 
 First, clone the repository:
 
-`git clone https://github.com/yourusername/yourprojectname.git
-cd yourprojectname`
+`git clone https://github.com/joshua-cornett/offline-react-accessment.git
+cd offline-react-accessment`
 
 Install dependencies:
 
