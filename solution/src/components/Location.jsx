@@ -1,6 +1,7 @@
 /**
  * Location selection component that uses a custom hook to fetch and display locations.
  *
+ * @component
  * @param {Array} locations - Array of location strings to populate the dropdown.
  * @param {string} selectedLocation - The currently selected location in the dropdown.
  * @param {function} setSelectedLocation - Function to update the selected location state.

@@ -3,30 +3,31 @@
  * Fetches and displays prior submission data, reflecting updates to entries.
  *
  * @component
- * @example
- * return (
-    <div className="App">
-      <h1>Awesome Form</h1>
-      <Form />
-      <h2>Prior Submissions</h2>
-      <EntriesTable />
-    </div>
-  )
+ * @param {Array} entries - Array of submission objects to display.
+ * @returns {JSX.Element} Table displaying each submission's name and location.
  */
-const Submissions = () => {
+const Submissions = ({ entries }) => {
   return (
     <table>
       <thead>
         <tr>
-          <th colSpan="2">Prior Submissons</th>
+          {/* The big header */}
+          <th colSpan="2">Prior Submissions</th>
         </tr>
         <tr>
+          {/* The sub headers (Name, Location)*/}
           <th>Name</th>
           <th>Location</th>
         </tr>
       </thead>
       <tbody>
-        {/** @todo Map over entries to populate rows (will likely use caching) */}
+        {/* Populate table with submissions */}
+        {entries.map((entry, index) => (
+          <tr key={index}>
+            <td>{entry.name}</td>
+            <td>{entry.location}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

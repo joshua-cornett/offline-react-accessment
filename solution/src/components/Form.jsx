@@ -5,52 +5,32 @@ import { useName } from '../hooks/useName';
 import { useLocations } from '../hooks/useLocations';
 
 /**
- * Form component for name, location, clearing, and submission
+ * Form component for name, location, clearing, and submission.
+ * Validates and processes submissions based on user input and validation status.
  *
- * Ensures that submissions are only processed when validations are passed.
- * Will only clear when input is present.
- *
- * @returns {JSX.Element} The complete form which contains:
- * -- Name input component
- * -- Locations input component
- * -- Clear and Submit buttons
+ * @param {function} onNewSubmission - Callback function to handle form submission data.
+ * @returns {JSX.Element} The complete form including input components for name and location, and control buttons.
  */
-const Form = () => {
-  // State and methods from custom hooks
-  const { name, setName, isNameValid, validating } = useName(); // Updated to use useName
+const Form = ({ addSubmission }) => {
+  const { name, setName, isNameValid, isNameAvailable, validating } = useName();
   const { locations, selectedLocation, setSelectedLocation } = useLocations();
+  const isLocationValid = selectedLocation !== ''; // Ensure the location is not empty
 
-  /**
-   * Handles changes to the name input field, triggering validation.
-   *
-   * @param {string} newName - The new name entered by the user.
-   */
   const handleNameChange = (newName) => {
-    setName(newName); // Update name state, which triggers debounced validation
+    setName(newName); // Update name state and trigger validation
   };
 
-  /**
-   * Handles the form submission event. Validates the state before processing submission.
-   * Alerts the user if submission cannot proceed due to validation or if it succeeds.
-   *
-   * @param {React.FormEvent<HTMLFormElement>} event - The form submission event.
-   */
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (validating || !isNameValid) {
+    if (!validating && isNameValid && isLocationValid && isNameAvailable) {
+      addSubmission({ name, location: selectedLocation });
+    } else {
       console.log(
-        'Validation in progress or name is invalid. Please correct the errors before submitting.',
+        'Validation in progress, or inputs are invalid. Submission not allowed.',
       );
-      return;
     }
-    console.log(
-      `Form submitted successfully with Name: ${name} and Location: ${selectedLocation}`,
-    );
   };
 
-  /**
-   * Clears all inputs and resets the form state.
-   */
   const handleClear = () => {
     setName('');
     setSelectedLocation('');
@@ -58,20 +38,18 @@ const Form = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Name input component with validation */}
       <Name
         name={name}
         onChange={handleNameChange}
         isValid={isNameValid}
+        isAvailable={isNameAvailable}
         validating={validating}
       />
-      {/* Location selection dropdown */}
       <Location
         locations={locations}
         selectedLocation={selectedLocation}
         setSelectedLocation={setSelectedLocation}
       />
-      {/* Clear button, disabled if no input */}
       <button
         type="button"
         onClick={handleClear}
@@ -79,8 +57,10 @@ const Form = () => {
       >
         Clear
       </button>
-      {/* Submit button, disabled if name is still validating */}
-      <button type="submit" disabled={validating}>
+      <button
+        type="submit"
+        disabled={validating || !isNameValid || !isLocationValid}
+      >
         Add
       </button>
     </form>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { isNameValid as API_validateName } from '../mock-api/apis';
 import { useDebounce } from './useDebouncing';
+import { useSubmissions } from './useSubmissions';
 
 /**
  * Custom hook for name input validation and management.
@@ -16,9 +17,11 @@ export const useName = () => {
   // State management and custom hooks
   const [name, setName] = useState('');
   const [isNameValid, setIsNameValid] = useState(null);
+  const [isNameAvailable, setIsNameAvailable] = useState(true);
   const [validating, setValidating] = useState(false);
   const debouncedName = useDebounce(name, 100); // Debouncing the name input to reduce frequency of validation calls.
   const validationSeq = useRef(0); // Sequence number to track the latest validation request.
+  const { checkNameAvailability } = useSubmissions(); // Assume this method is available
 
   useEffect(() => {
     const controller = new AbortController(); // AbortController to manage fetch cancellations.
@@ -29,11 +32,14 @@ export const useName = () => {
       if (!debouncedName) {
         // If no debounce, stop validating.
         setIsNameValid(null);
+        setIsNameAvailable(checkNameAvailability(debouncedName));
+
         setValidating(false);
         return;
       }
 
       setValidating(true); // Indicate validation start (prevents apparent feedback lag)
+      setIsNameAvailable(true); // Empty name is not a duplicate by default
 
       try {
         const result = await API_validateName(debouncedName, {
@@ -46,7 +52,7 @@ export const useName = () => {
         }
       } catch (error) {
         if (error.name !== 'AbortError') {
-          // Handle errors that are not abort errors.
+          // Handle errors that are not aborts.
           console.error('Error validating name:', error);
           if (currentSeq === validationSeq.current) {
             // Stop validation on error.
@@ -62,12 +68,14 @@ export const useName = () => {
     return () => {
       controller.abort(); // Abort fetch on change or unmount.
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]); // Effect triggered by debounce
 
   return {
     name,
     setName,
     isNameValid,
+    isNameAvailable,
     validating,
   };
 };
