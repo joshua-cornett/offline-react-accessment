@@ -35,7 +35,7 @@ export const SubmissionsProvider = ({ children }) => {
     return !submissions.some((sub) => sub.name === name);
   };
 
-  // Provide the state and functions via context
+  // Provide state and functions via context
   return (
     <SubmissionsContext.Provider
       value={{

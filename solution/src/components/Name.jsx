@@ -5,9 +5,7 @@ import React from 'react';
  *
  * @param {string} name - Current name value.
  * @param {function} onChange - Handler to update name.
- * @param {boolean} isValid - Current validation state of the name.
- * @param {boolean} isAvailable - Availability state of the name.
- * @param {boolean} isValidating - Flag indicating if validation is in progress.
+ * @param {object} status - Object containing status info: message and corresponding color
  * @returns {JSX.Element} Input element for name and status messages.
  */
 const Name = ({ name, onChange, status }) => {

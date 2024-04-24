@@ -12,17 +12,14 @@ import { useSubmissions } from '../contexts/SubmissionsContext';
  * and flags for ongoing validation.
  */
 export const useName = () => {
-  // State to store the current name value
+  // States for name and validation
   const [name, setName] = useState('');
-  // State to store the validation status of the current name
   const [isNameValid, setIsNameValid] = useState(null);
-  // State to store the availability status of the current name
   const [isNameAvailable, setIsNameAvailable] = useState(true);
-  // State to indicate whether validation is currently being performed
   const [validating, setValidating] = useState(false);
   // The debounced version of the name, used to reduce frequency of validation calls
   const debouncedName = useDebounce(name, 300);
-  // Utilize the checkNameAvailability function from useSubmissions hook
+  // Utilize the checkNameAvailability function from useSubmissions context provider
   const { checkNameAvailability } = useSubmissions();
 
   // Additional state to manually control the status message
@@ -37,7 +34,7 @@ export const useName = () => {
       return { message: 'Checking...', color: 'blue' };
     }
     if (!isNameValid && debouncedName) {
-      return { message: 'Invalid', color: 'red' }; // Invalid state when there's some input
+      return { message: 'Invalid', color: 'red' }; // Invalid state when there's input
     }
     if (!isNameAvailable) {
       return { message: 'Unavailable', color: 'orange' };

@@ -45,11 +45,11 @@ This will run the application in development mode. Open http://localhost:3000 to
 
 ### Usage
 
-Explain how to use the application with examples:
-
-- 1. **Name Input:** Enter a name in the input field. The field will validate the name as you type and indicate the validation status.
-- 2. **Location Select:** Choose a location from the dropdown. If no location is selected and an attempt to submit is made, the field will flash indicating a required action.
-- 3. **Submit:** Click the submit button once all fields are filled correctly. If any field is incorrectly filled, the form will show an error.
+- **Empty Input** If you don't enter or select anything, the field will flash indicating a required action.
+- **Name Input:** Enter a name in the input field. The field will validate the name as you type and indicate the validation status.
+- **Location Select:** Choose a location from the dropdown. Note that it is custom :)
+- **Submit:** Click the submit button once all fields are filled correctly. You shouldn't be able to unless the input is valid.
+- **Clear:** Note that you can also clear the input and the submissions for a fresh start (you can also clear your cache and refresh, but this is easier).
 
 ```
 
